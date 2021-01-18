@@ -12,6 +12,7 @@ public class Messages
     public final String TOKEN_EXPIRED = "Your Token is no longer valid.";
     public final String TOKEN_CANNOT_EXTRACT_USER = "User could not be extracted from token.";
     public final String NO_USERS_FOUND = "No users found.";
+    public final String NO_CONTACTS_FOUND = "No contacts found.";
     public final String DATABASE_POPULATED = "Database populated!";
     public final String DATABASE_ALREADY_POPULATED = "Already populated!";
     public final String SERVER_IS_UP = "Server is up!";

@@ -1,6 +1,7 @@
 
 package rest;
 
+import entities.Contact;
 import entities.Role;
 import entities.User;
 import errorhandling.API_Exception;
@@ -16,6 +17,8 @@ import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasItems;
+import static org.hamcrest.Matchers.not;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -30,11 +33,18 @@ public class SalespersonResourceTest {
     private static final int SERVER_PORT = 7777;
     private static final String SERVER_URL = "http://localhost/api";
     private static final User SALESPERSON = new User("salesperson", "test");
+    
     private static final String CONTACT_NAME = "Test name";
     private static final String CONTACT_EMAIL = "Testmail@mail.com";
     private static final String CONTACT_COMPANY = "Test company";
     private static final String CONTACT_JOBTITLE = "Test title";
     private static final String CONTACT_PHONE = "Test phone";
+    
+    private static final String CONTACT_NAME_2 = "Name test";
+    private static final String CONTACT_EMAIL_2 = "Mailtest@mail.com";
+    private static final String CONTACT_COMPANY_2 = "Company test";
+    private static final String CONTACT_JOBTITLE_2 = "Title test";
+    private static final String CONTACT_PHONE_2 = "Phone test";
 
     static final URI BASE_URI = UriBuilder.fromUri(SERVER_URL).port(SERVER_PORT).build();
     private static HttpServer httpServer;
@@ -80,11 +90,16 @@ public class SalespersonResourceTest {
                 em.createQuery("delete from Contact").executeUpdate();
                 em.createQuery("delete from Opportunity").executeUpdate();
 
+                Contact contact1 = new Contact(CONTACT_NAME, CONTACT_EMAIL, CONTACT_COMPANY, CONTACT_JOBTITLE, CONTACT_PHONE);
+                Contact contact2 = new Contact(CONTACT_NAME_2, CONTACT_EMAIL_2, CONTACT_COMPANY_2, CONTACT_JOBTITLE_2, CONTACT_PHONE_2);
+
                 User salesperson = new User(SALESPERSON.getUserName(), SALESPERSON.getUserPass());
                 Role salespersonRole = new Role("salesperson");
                 salesperson.addRole(salespersonRole);
                 em.persist(salespersonRole);
                 em.persist(salesperson);
+                em.persist(contact1);
+                em.persist(contact2);
             em.getTransaction().commit();
         } finally {
             em.close();
@@ -132,7 +147,7 @@ public class SalespersonResourceTest {
                 .contentType("application/json")
                 .body(jsonRequest)
                 .header("x-access-token", securityToken)
-                .when().post("/salesperson/create-contact").then()
+                .when().post("/salesperson/contacts/create-contact").then()
                 .statusCode(200)
                 .body("name", equalTo(CONTACT_NAME))
                 .body("email", equalTo(CONTACT_EMAIL))
@@ -156,7 +171,7 @@ public class SalespersonResourceTest {
                 .contentType("application/json")
                 .body(jsonRequest)
                 .header("x-access-token", securityToken)
-                .when().post("/salesperson/create-contact").then()
+                .when().post("/salesperson/contacts/create-contact").then()
                 .statusCode(400)
                 .body("message", equalTo(MESSAGES.MISSING_INPUT));
     }
@@ -173,7 +188,30 @@ public class SalespersonResourceTest {
         given()
                 .contentType("application/json")
                 .body(jsonRequest)
-                .when().post("/salesperson/create-contact").then()
+                .when().post("/salesperson/contacts/create-contact").then()
+                .statusCode(403)
+                .body("message", equalTo(MESSAGES.NOT_AUTHENTICADED));
+    }
+    
+    @Test
+    public void getAllContactsTestRest() {
+        
+        login(SALESPERSON.getUserName(), SALESPERSON.getUserPass());
+        
+        given()
+                .contentType("application/json")
+                .header("x-access-token", securityToken)
+                .when().get("/salesperson/contacts/all").then()
+                .statusCode(200).assertThat()
+                .body("[0].name", not(equalTo(null)))
+                .body("[1].name", not(equalTo(null)));
+    }
+    
+    @Test
+    public void notAuthenticated_getAllContactsTestRest() {
+        given()
+                .contentType("application/json")
+                .when().get("/salesperson/contacts/all").then()
                 .statusCode(403)
                 .body("message", equalTo(MESSAGES.NOT_AUTHENTICADED));
     }

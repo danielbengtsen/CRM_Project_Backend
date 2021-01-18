@@ -5,6 +5,8 @@ import dto.ContactDTO;
 import entities.Contact;
 import errorhandling.API_Exception;
 import errorhandling.Messages;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
@@ -56,5 +58,28 @@ public class SalespersonFacade
             em.close();
         }
         return contactDTO;
+    }
+    
+    public List<ContactDTO> getAllContacts() throws API_Exception
+    {
+        EntityManager em = emf.createEntityManager();
+        
+        try 
+        {
+            List<Contact> allContacts = em.createNamedQuery("Contact.getAllRows").getResultList();
+            List<ContactDTO> allContactsDTO = new ArrayList();
+            for(Contact c : allContacts)
+            {
+                allContactsDTO.add(new ContactDTO(c));
+            }
+            if(allContacts.isEmpty()) 
+            {
+                throw new API_Exception(MESSAGES.NO_CONTACTS_FOUND, 404);
+            }
+            return allContactsDTO;
+        } finally 
+        {
+            em.close();
+        }
     }
 }

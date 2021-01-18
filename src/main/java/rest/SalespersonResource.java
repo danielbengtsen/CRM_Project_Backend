@@ -47,7 +47,7 @@ public class SalespersonResource
     }
 
     @POST
-    @Path("create-contact")
+    @Path("contacts/create-contact")
     @RolesAllowed("salesperson")
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
@@ -63,5 +63,14 @@ public class SalespersonResource
             contactDTO.getJobtitle(), 
             contactDTO.getPhone()
         ));
+    }
+    
+    @GET
+    @Path("contacts/all")
+    @RolesAllowed("salesperson")
+    @Produces({MediaType.APPLICATION_JSON})
+    public String getAllContacts() throws API_Exception
+    {   
+        return GSON.toJson(SALESPERSON_FACADE.getAllContacts());
     }
 }
