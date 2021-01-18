@@ -65,7 +65,7 @@ public class TestingResource
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("user")
-    @RolesAllowed("user")
+    @RolesAllowed("salesperson")
     public String getFromUser() 
     {
         String thisuser = securityContext.getUserPrincipal().getName();

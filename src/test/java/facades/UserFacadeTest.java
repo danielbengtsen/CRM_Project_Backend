@@ -16,7 +16,7 @@ public class UserFacadeTest
 
     private static EntityManagerFactory emf;
     private static UserFacade facade;
-    private static final User user = new User("user", "password");
+    private static final User SALESPERSON = new User("salesperson", "test");
 
     public UserFacadeTest() {}
 
@@ -38,19 +38,15 @@ public class UserFacadeTest
             em.createQuery("delete from User").executeUpdate();
             em.createQuery("delete from Role").executeUpdate();
 
-            Role userRole = new Role("user");
+            Role salespersonRole = new Role("salesperson");
             Role adminRole = new Role("admin");
-            user.addRole(userRole);
-            User admin = new User("admin", "password");
+            SALESPERSON.addRole(salespersonRole);
+            User admin = new User("admin", "test");
             admin.addRole(adminRole);
-            User both = new User("user_admin", "password");
-            both.addRole(userRole);
-            both.addRole(adminRole);
-            em.persist(userRole);
+            em.persist(salespersonRole);
             em.persist(adminRole);
-            em.persist(user);
+            em.persist(SALESPERSON);
             em.persist(admin);
-            em.persist(both);
             em.getTransaction().commit();
         } finally 
         {
@@ -62,8 +58,8 @@ public class UserFacadeTest
     public void getVeryfiedUserTest() throws AuthenticationException 
     {
         
-        User expected = user;
-        User result = facade.getVeryfiedUser(user.getUserName(), "password");
+        User expected = SALESPERSON;
+        User result = facade.getVeryfiedUser(SALESPERSON.getUserName(), "test");
 
         assertEquals(expected.getUserPass(), result.getUserPass());
     }
