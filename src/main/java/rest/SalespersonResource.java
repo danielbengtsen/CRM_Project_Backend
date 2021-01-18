@@ -2,7 +2,9 @@ package rest;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.nimbusds.jose.shaded.json.JSONObject;
 import dto.ContactDTO;
+import dto.EmailDTO;
 import entities.User;
 import errorhandling.API_Exception;
 import errorhandling.Messages;
@@ -72,5 +74,17 @@ public class SalespersonResource
     public String getAllContacts() throws API_Exception
     {   
         return GSON.toJson(SALESPERSON_FACADE.getAllContacts());
+    }
+    
+    @POST
+    @Path("contacts/single")
+    @RolesAllowed("salesperson")
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
+    public String getSingleContact(String jsonEmail) throws API_Exception
+    {
+        String email = GSON.fromJson(jsonEmail, EmailDTO.class).getEmail();
+        System.out.println("Lalallaala email: " + email);
+        return GSON.toJson(SALESPERSON_FACADE.getSingleContact(email));
     }
 }

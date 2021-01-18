@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.TypedQuery;
 
 
 public class SalespersonFacade 
@@ -81,5 +82,32 @@ public class SalespersonFacade
         {
             em.close();
         }
+    }
+    
+    public ContactDTO getSingleContact(String email) throws API_Exception
+    {
+        EntityManager em = emf.createEntityManager();
+        
+        if(email.isEmpty())
+        {
+            throw new API_Exception(MESSAGES.MISSING_INPUT, 400);
+        }
+        
+        ContactDTO contactDTO;
+        
+        try 
+        {
+            TypedQuery<Contact> query = em.createQuery("SELECT c FROM Contact c WHERE c.email = :email", Contact.class)
+                .setParameter("email", email);
+            if(query.getSingleResult() == null)
+            {
+                throw new API_Exception(MESSAGES.CANNOT_FIND_CONTACT, 404);
+            }
+            contactDTO = new ContactDTO(query.getSingleResult());  
+        } finally 
+        {
+            em.close();
+        }
+        return contactDTO;
     }
 }

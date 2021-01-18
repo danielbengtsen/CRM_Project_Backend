@@ -96,5 +96,21 @@ public class SalespersonFacadeTest
 
         assertEquals(expectedSize, result.size());
     }
+    
+    @Test
+    public void getSingleContactTest() throws API_Exception 
+    {
+        ContactDTO expected = new ContactDTO(
+                new Contact(CONTACT_NAME, CONTACT_EMAIL, CONTACT_COMPANY, 
+                        CONTACT_JOBTITLE, CONTACT_PHONE));
+        
+        ContactDTO result = facade.getSingleContact(CONTACT_EMAIL);
+
+        assertEquals(expected.getName(), result.getName());
+        assertEquals(expected.getEmail(), result.getEmail());
+        assertEquals(expected.getCompany(), result.getCompany());
+        assertEquals(expected.getJobtitle(), result.getJobtitle());
+        assertEquals(expected.getPhone(), result.getPhone());
+    }
 
 }

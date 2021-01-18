@@ -216,4 +216,52 @@ public class SalespersonResourceTest {
                 .body("message", equalTo(MESSAGES.NOT_AUTHENTICADED));
     }
     
+    @Test
+    public void getSingleContactTestRest() {
+        String jsonRequest = String.format(
+                "{ \"email\": \"%s\" }", CONTACT_EMAIL);
+        
+        login(SALESPERSON.getUserName(), SALESPERSON.getUserPass());
+        
+        given()
+                .contentType("application/json")
+                .body(jsonRequest)
+                .header("x-access-token", securityToken)
+                .when().post("/salesperson/contacts/single").then()
+                .statusCode(200)
+                .body("name", equalTo(CONTACT_NAME))
+                .body("email", equalTo(CONTACT_EMAIL))
+                .body("company", equalTo(CONTACT_COMPANY))
+                .body("jobtitle", equalTo(CONTACT_JOBTITLE))
+                .body("phone", equalTo(CONTACT_PHONE));
+    }
+    
+    @Test
+    public void missingInput_getSingleContactTestRest() {
+        String jsonRequest = "{ \"email\": \"\" }";
+        
+        login(SALESPERSON.getUserName(), SALESPERSON.getUserPass());
+        
+        given()
+                .contentType("application/json")
+                .body(jsonRequest)
+                .header("x-access-token", securityToken)
+                .when().post("/salesperson/contacts/single").then()
+                .statusCode(400)
+                .body("message", equalTo(MESSAGES.MISSING_INPUT));
+    }
+    
+    @Test
+    public void notAuthenticated_getSingleContactTestRest() {
+        String jsonRequest = String.format(
+                "{ \"email\": \"%s\" }", CONTACT_EMAIL);
+        
+        given()
+                .contentType("application/json")
+                .body(jsonRequest)
+                .when().post("/salesperson/contacts/single").then()
+                .statusCode(403)
+                .body("message", equalTo(MESSAGES.NOT_AUTHENTICADED));
+    }
+    
 }

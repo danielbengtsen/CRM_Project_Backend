@@ -33,9 +33,12 @@ public class TestDataFacade
            User admin = new User(adminNameAndRole, testPwd);
            
            Contact contact1 = new Contact("Contact 1", "contact1@nicecompany.com", "Nice Company", "Developer", "12345678");
+           Contact contact2 = new Contact("Contact 2", "contact2@nicecompany.com", "Companiay", "Programmer", "87654321");
            Opportunity oppor1 = new Opportunity("Nice Company opportunity", 40000);
+           Opportunity oppor2 = new Opportunity("Companiay opportunity", 50000);
            
            contact1.addOpportunity(oppor1);
+           contact2.addOpportunity(oppor2);
 
            em.getTransaction().begin();
            Role salesRole = new Role(salesNameAndRole);
@@ -47,6 +50,7 @@ public class TestDataFacade
            em.persist(salesperson);
            em.persist(admin);
            em.persist(contact1);
+           em.persist(contact2);
            em.getTransaction().commit();
            
            return MESSAGES.DATABASE_POPULATED;
