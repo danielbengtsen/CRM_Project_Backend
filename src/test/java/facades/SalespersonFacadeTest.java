@@ -112,5 +112,41 @@ public class SalespersonFacadeTest
         assertEquals(expected.getJobtitle(), result.getJobtitle());
         assertEquals(expected.getPhone(), result.getPhone());
     }
+    
+    @Test
+    public void editContactTest() throws API_Exception 
+    {
+        String newName = "Hans";
+        String newEmail = "hans@mail.com";
+        String newCompany = "Hans Firma";
+        String newJobtitle = "Painter";
+        String newPhone = "13243546";
+        
+        ContactDTO expected = new ContactDTO(
+                new Contact(newName, newEmail, newCompany, 
+                        newJobtitle, newPhone));
+        
+        ContactDTO beforeEdit = facade.getSingleContact(CONTACT_EMAIL);
+        ContactDTO result = facade.editContact(CONTACT_EMAIL, newName, newEmail, newCompany, newJobtitle, newPhone);
+        
+        List<ContactDTO> afterEditList = facade.getAllContacts();
+        
+        for(ContactDTO c : afterEditList)
+        {
+            if(beforeEdit.getEmail().equals(c.getEmail()))
+            {
+                assertEquals(true, false);
+            } else
+            {
+                assertEquals(true, true);
+            }
+        }
+
+        assertEquals(expected.getName(), result.getName());
+        assertEquals(expected.getEmail(), result.getEmail());
+        assertEquals(expected.getCompany(), result.getCompany());
+        assertEquals(expected.getJobtitle(), result.getJobtitle());
+        assertEquals(expected.getPhone(), result.getPhone());
+    }
 
 }

@@ -163,7 +163,7 @@ public class SalespersonResourceTest {
                 + "\"email\": \"%s\","
                 + "\"company\": \"%s\","
                 + "\"jobtitle\": \"%s\","
-                + "\"phone\": \"%s\" }", CONTACT_EMAIL, CONTACT_COMPANY, CONTACT_JOBTITLE, CONTACT_PHONE);
+                + "\"phone\": \"%s\" }", CONTACT_NAME, CONTACT_EMAIL, CONTACT_COMPANY, CONTACT_JOBTITLE, CONTACT_PHONE);
         
         login(SALESPERSON.getUserName(), SALESPERSON.getUserPass());
         
@@ -260,6 +260,85 @@ public class SalespersonResourceTest {
                 .contentType("application/json")
                 .body(jsonRequest)
                 .when().post("/salesperson/contacts/single").then()
+                .statusCode(403)
+                .body("message", equalTo(MESSAGES.NOT_AUTHENTICADED));
+    }
+    
+    @Test
+    public void editContactTestRest() {
+        String newName = "Hans";
+        String newEmail = "hans@mail.com";
+        String newCompany = "Hans Firma";
+        String newJobtitle = "Painter";
+        String newPhone = "13243546";
+        
+        String jsonRequest = String.format(
+                "{ \"name\": \"%s\", "
+                + "\"email\": \"%s\","
+                + "\"company\": \"%s\","
+                + "\"jobtitle\": \"%s\","
+                + "\"phone\": \"%s\" }", newName, newEmail, newCompany, newJobtitle, newPhone);
+        
+        login(SALESPERSON.getUserName(), SALESPERSON.getUserPass());
+        
+        given()
+                .contentType("application/json")
+                .body(jsonRequest)
+                .header("x-access-token", securityToken)
+                .when().put("/salesperson/contacts/edit/" + CONTACT_EMAIL).then()
+                .statusCode(200)
+                .body("name", equalTo(newName))
+                .body("email", equalTo(newEmail))
+                .body("company", equalTo(newCompany))
+                .body("jobtitle", equalTo(newJobtitle))
+                .body("phone", equalTo(newPhone));
+    }
+    
+    @Test
+    public void missingInput_editContactTestRest() {
+        String newName = "Hans";
+        String newEmail = "hans@mail.com";
+        String newCompany = "Hans Firma";
+        String newJobtitle = "Painter";
+        String newPhone = "13243546";
+        
+        String jsonRequest = String.format(
+                "{ \"name\": \"\", "
+                + "\"email\": \"%s\","
+                + "\"company\": \"%s\","
+                + "\"jobtitle\": \"%s\","
+                + "\"phone\": \"%s\" }", newEmail, newCompany, newJobtitle, newPhone);
+        
+        login(SALESPERSON.getUserName(), SALESPERSON.getUserPass());
+        
+        given()
+                .contentType("application/json")
+                .body(jsonRequest)
+                .header("x-access-token", securityToken)
+                .when().put("/salesperson/contacts/edit/" + CONTACT_EMAIL).then()
+                .statusCode(400)
+                .body("message", equalTo(MESSAGES.MISSING_INPUT));
+    }
+    
+    @Test
+    public void notAuthenticated_editContactTestRest() {
+        String newName = "Hans";
+        String newEmail = "hans@mail.com";
+        String newCompany = "Hans Firma";
+        String newJobtitle = "Painter";
+        String newPhone = "13243546";
+        
+        String jsonRequest = String.format(
+                "{ \"name\": \"%s\", "
+                + "\"email\": \"%s\","
+                + "\"company\": \"%s\","
+                + "\"jobtitle\": \"%s\","
+                + "\"phone\": \"%s\" }", newName, newEmail, newCompany, newJobtitle, newPhone);
+        
+        given()
+                .contentType("application/json")
+                .body(jsonRequest)
+                .when().put("/salesperson/contacts/edit/" + CONTACT_EMAIL).then()
                 .statusCode(403)
                 .body("message", equalTo(MESSAGES.NOT_AUTHENTICADED));
     }

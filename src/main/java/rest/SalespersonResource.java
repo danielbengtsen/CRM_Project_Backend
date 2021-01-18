@@ -21,7 +21,9 @@ import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Produces;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.SecurityContext;
 import utils.EMF_Creator;
@@ -84,7 +86,26 @@ public class SalespersonResource
     public String getSingleContact(String jsonEmail) throws API_Exception
     {
         String email = GSON.fromJson(jsonEmail, EmailDTO.class).getEmail();
-        System.out.println("Lalallaala email: " + email);
         return GSON.toJson(SALESPERSON_FACADE.getSingleContact(email));
+    }
+    
+    @PUT
+    @Path("contacts/edit/{oldemail}")
+    @RolesAllowed("salesperson")
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
+    public String editContact(@PathParam("oldemail") String oldEmail, String contactInformation) throws API_Exception
+    {
+        ContactDTO contactDTO = GSON.fromJson(contactInformation, ContactDTO.class);
+        
+        return GSON.toJson(SALESPERSON_FACADE.editContact
+        (
+            oldEmail,
+            contactDTO.getName(), 
+            contactDTO.getEmail(), 
+            contactDTO.getCompany(), 
+            contactDTO.getJobtitle(), 
+            contactDTO.getPhone()
+        ));
     }
 }

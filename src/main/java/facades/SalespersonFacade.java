@@ -110,4 +110,41 @@ public class SalespersonFacade
         }
         return contactDTO;
     }
+    
+    public ContactDTO editContact(String oldEmail, String name, String email, String company, String jobtitle, String phone) throws API_Exception
+    {
+        EntityManager em = emf.createEntityManager();
+        
+        if(name.isEmpty() || email.isEmpty() || company.isEmpty() || jobtitle.isEmpty() || phone.isEmpty())
+        {
+            throw new API_Exception(MESSAGES.MISSING_INPUT, 400);
+        }
+        
+        Contact contact = new Contact(name, email, company, jobtitle, phone);
+        ContactDTO contactDTO = new ContactDTO(contact);
+        
+        try 
+        {
+            TypedQuery<Contact> query = em.createQuery("SELECT c FROM Contact c WHERE c.email = :email", Contact.class)
+                .setParameter("email", oldEmail);
+            if(query.getSingleResult() == null)
+            {
+                throw new API_Exception(MESSAGES.CANNOT_FIND_CONTACT, 404);
+            }
+            
+            Contact contactToEdit = query.getSingleResult();
+
+            em.getTransaction().begin();
+                contactToEdit.setName(contactDTO.getName());
+                contactToEdit.setEmail(contactDTO.getEmail());
+                contactToEdit.setCompany(contactDTO.getCompany());
+                contactToEdit.setJobtitle(contactDTO.getJobtitle());
+                contactToEdit.setPhone(contactDTO.getPhone());
+            em.getTransaction().commit();
+        } finally 
+        {
+            em.close();
+        }
+        return contactDTO;
+    }
 }
