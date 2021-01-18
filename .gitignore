@@ -1,0 +1,6 @@
+**/target/
+**/nb-configuration.xml
+
+/nbproject/
+
+/src/main/java/utils/SetupTestPassword.java
