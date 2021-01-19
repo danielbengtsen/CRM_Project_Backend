@@ -34,6 +34,8 @@ public class TestDataFacade
            
            Contact contact1 = new Contact("Contact 1", "contact1@nicecompany.com", "Nice Company", "Developer", "12345678");
            Contact contact2 = new Contact("Contact 2", "contact2@nicecompany.com", "Companiay", "Programmer", "87654321");
+           Contact contact3 = new Contact("Contact 3", "contact3@nicecompany.com", "Kompagne", "Singer", "13243546");
+           Contact contact4 = new Contact("Contact 4", "contact4@nicecompany.com", "Kambagne", "Machinelearning", "64534231");
            Opportunity oppor1 = new Opportunity("Nice Company opportunity", 40000);
            Opportunity oppor2 = new Opportunity("Companiay opportunity", 50000);
            
@@ -51,6 +53,8 @@ public class TestDataFacade
            em.persist(admin);
            em.persist(contact1);
            em.persist(contact2);
+           em.persist(contact3);
+           em.persist(contact4);
            em.getTransaction().commit();
            
            return MESSAGES.DATABASE_POPULATED;

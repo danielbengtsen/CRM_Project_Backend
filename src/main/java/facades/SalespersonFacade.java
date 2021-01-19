@@ -170,7 +170,8 @@ public class SalespersonFacade
             }
             Contact c = query.getSingleResult();
             em.getTransaction().begin();
-                em.createQuery("DELETE FROM Contact c WHERE c.email = :email").setParameter("email", c.getEmail()).executeUpdate();
+                em.createQuery("DELETE FROM Contact c WHERE c.email = :email", Contact.class)
+                        .setParameter("email", c.getEmail()).executeUpdate();
             em.getTransaction().commit();
             contactDTO = new ContactDTO(c);  
         } finally 
