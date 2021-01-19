@@ -343,4 +343,26 @@ public class SalespersonResourceTest {
                 .body("message", equalTo(MESSAGES.NOT_AUTHENTICADED));
     }
     
+    @Test
+    public void deleteContactTestRest() {
+        
+        login(SALESPERSON.getUserName(), SALESPERSON.getUserPass());
+        
+        given()
+                .contentType("application/json")
+                .header("x-access-token", securityToken)
+                .when().delete("/salesperson/contacts/delete/" + CONTACT_EMAIL).then()
+                .statusCode(200);
+    }
+    
+    @Test
+    public void notAuthenticated_deleteContactTestRest() {
+        
+        given()
+                .contentType("application/json")
+                .when().delete("/salesperson/contacts/delete/" + CONTACT_EMAIL).then()
+                .statusCode(403)
+                .body("message", equalTo(MESSAGES.NOT_AUTHENTICADED));
+    }
+    
 }

@@ -20,6 +20,7 @@ public class Messages
     public final String MALFORMED_JSON = "Malformed JSON.";
     public final String PERSIST_EXCEPTION = "There was an error when persisting to the database.";
     public final String MISSING_INPUT = "Please fill all the inputs.";
+    public final String CANNOT_DELETE = "Cannot delete.";
     
     
     public Messages() {}

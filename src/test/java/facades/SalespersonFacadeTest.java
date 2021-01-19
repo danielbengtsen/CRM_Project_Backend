@@ -148,5 +148,21 @@ public class SalespersonFacadeTest
         assertEquals(expected.getJobtitle(), result.getJobtitle());
         assertEquals(expected.getPhone(), result.getPhone());
     }
+    
+    @Test
+    public void deleteContactTest() throws API_Exception 
+    {
+        ContactDTO expected = new ContactDTO(
+                new Contact(CONTACT_NAME, CONTACT_EMAIL, CONTACT_COMPANY, 
+                        CONTACT_JOBTITLE, CONTACT_PHONE));
+        
+        ContactDTO result = facade.deleteContact(CONTACT_EMAIL);
+
+        assertEquals(expected.getName(), result.getName());
+        assertEquals(expected.getEmail(), result.getEmail());
+        assertEquals(expected.getCompany(), result.getCompany());
+        assertEquals(expected.getJobtitle(), result.getJobtitle());
+        assertEquals(expected.getPhone(), result.getPhone());
+    }
 
 }

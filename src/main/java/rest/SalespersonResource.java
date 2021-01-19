@@ -16,6 +16,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.TypedQuery;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Produces;
@@ -107,5 +108,14 @@ public class SalespersonResource
             contactDTO.getJobtitle(), 
             contactDTO.getPhone()
         ));
+    }
+    
+    @DELETE
+    @Path("contacts/delete/{email}")
+    @RolesAllowed("salesperson")
+    @Produces({MediaType.APPLICATION_JSON})
+    public String deleteContact(@PathParam("email") String email) throws API_Exception
+    {   
+        return GSON.toJson(SALESPERSON_FACADE.deleteContact(email));
     }
 }

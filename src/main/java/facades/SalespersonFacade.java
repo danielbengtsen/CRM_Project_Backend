@@ -147,4 +147,34 @@ public class SalespersonFacade
         }
         return contactDTO;
     }
+    
+    
+    public ContactDTO deleteContact(String email) throws API_Exception
+    {
+        EntityManager em = emf.createEntityManager();
+        
+        if(email.isEmpty())
+        {
+            throw new API_Exception(MESSAGES.MISSING_INPUT, 400);
+        }
+        
+        ContactDTO contactDTO;
+        
+        try 
+        {
+            TypedQuery<Contact> query = em.createQuery("SELECT c FROM Contact c WHERE c.email = :email", Contact.class)
+                .setParameter("email", email);
+            if(query.getSingleResult() == null)
+            {
+                throw new API_Exception(MESSAGES.CANNOT_FIND_CONTACT, 404);
+            }
+            Contact c = query.getSingleResult();
+            em.remove(c);
+            contactDTO = new ContactDTO(c);  
+        } finally 
+        {
+            em.close();
+        }
+        return contactDTO;
+    }
 }
