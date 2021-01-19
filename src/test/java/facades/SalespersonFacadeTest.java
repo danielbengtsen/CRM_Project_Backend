@@ -157,6 +157,19 @@ public class SalespersonFacadeTest
                         CONTACT_JOBTITLE, CONTACT_PHONE));
         
         ContactDTO result = facade.deleteContact(CONTACT_EMAIL);
+        
+        List<ContactDTO> afterEditList = facade.getAllContacts();
+        
+        for(ContactDTO c : afterEditList)
+        {
+            if(expected.getEmail().equals(c.getEmail()))
+            {
+                assertEquals(true, false);
+            } else
+            {
+                assertEquals(true, true);
+            }
+        }
 
         assertEquals(expected.getName(), result.getName());
         assertEquals(expected.getEmail(), result.getEmail());

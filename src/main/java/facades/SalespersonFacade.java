@@ -169,7 +169,9 @@ public class SalespersonFacade
                 throw new API_Exception(MESSAGES.CANNOT_FIND_CONTACT, 404);
             }
             Contact c = query.getSingleResult();
-            em.remove(c);
+            em.getTransaction().begin();
+                em.createQuery("DELETE FROM Contact c WHERE c.email = :email").setParameter("email", c.getEmail()).executeUpdate();
+            em.getTransaction().commit();
             contactDTO = new ContactDTO(c);  
         } finally 
         {
